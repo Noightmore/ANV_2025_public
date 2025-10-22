@@ -10,4 +10,6 @@ add_executable(hergesel_cafe main.cpp config/CafeConfig.h config/CafeConfig.cpp
         model/Coffee.cpp
         model/Tea.cpp
         model/DrinkFactory.h
-        model/DrinkFactory.cpp)
+        model/DrinkFactory.cpp
+        model/CustomDrink.cpp
+        model/CustomDrink.h)
