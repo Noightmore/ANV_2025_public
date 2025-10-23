@@ -17,7 +17,7 @@ private:
     // meaning just give me a simple default constructor
     CafeConfig() = default;
 
-    std::string const cafeName = "Smart Café";
+    constexpr static std::string cafeName = "Smart Café";
 
 public:
     // Delete copy constructor and assignment operator to enforce singleton

@@ -5,5 +5,5 @@
 #include "Tea.h"
 
 std::string_view Tea::serve() const {
-    return "Serving Tea";
+    return default_serve_message;
 }

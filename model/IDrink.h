@@ -6,9 +6,13 @@
 #define HERG_CAFE_DRINK_H
 #include <string>
 
+
 class IDrink {
 
 private:
+
+protected:
+    constexpr static std::string default_serve_message = "Serving Drink";
 
 public:
     virtual std::string_view serve() const = 0; // Pure virtual function to be implemented by derived classes

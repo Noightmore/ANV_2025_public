@@ -4,7 +4,7 @@
 
 #ifndef HERG_CAFE_DRINKFACTORY_H
 #define HERG_CAFE_DRINKFACTORY_H
-#include "IDrink.h"
+#include "../model/IDrink.h"
 
 enum class DrinkType {
     Coffee,

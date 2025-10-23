@@ -6,8 +6,8 @@
 
 #include <stdexcept>
 
-#include "Coffee.h"
-#include "Tea.h"
+#include "../model/Coffee.h"
+#include "../model/Tea.h"
 
 DrinkType DrinkFactory::stringToCoffeeType(std::string_view const str){
     if (str == "Tea") return DrinkType::Tea;
