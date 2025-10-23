@@ -16,7 +16,8 @@ private:
     bool sugar = false;
     bool caramel = false;
 
-    explicit CustomDrink(std::string base, bool milk, bool sugar, bool caramel)
+    // explicit keyword
+    explicit CustomDrink(std::string base, const bool milk, const bool sugar, const bool caramel)
         : base(std::move(base)), milk(milk), sugar(sugar), caramel(caramel) {}
         // pass by value and use std::move for efficiency instead of pass by reference
 
@@ -43,10 +44,10 @@ private:
 
 public:
     explicit Builder(std::string base) {
-        this->base = base;
+        this->base = std::move(base);
     }
 
-    explicit Builder(const std::string& base) : base(base) {}
+    //explicit Builder(const std::string& base) : base(base) {}
 
     Builder& withMilk() {
         this->milk = true;
