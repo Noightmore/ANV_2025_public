@@ -17,4 +17,5 @@ add_executable(hergesel_cafe main.cpp config/CafeConfig.h config/CafeConfig.cpp
         helper/EmployeeObserver.cpp
         helper/EmployeeObserver.h
         helper/OrderSubject.cpp
-        helper/OrderSubject.h)
+        helper/OrderSubject.h
+        helper/PaymentStrategy.h)
