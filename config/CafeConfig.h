@@ -38,7 +38,7 @@ public:
     static CafeConfig& getInstance();
 
     // Using string_view for efficient read-only access
-    std::string_view getCafeName() const;
+    std::string_view getCafeName();
 
     // Alternative if you need to modify the name
     //void setCafeName(std::string_view newName);

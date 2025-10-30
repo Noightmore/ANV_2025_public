@@ -18,4 +18,10 @@ add_executable(hergesel_cafe main.cpp config/CafeConfig.h config/CafeConfig.cpp
         helper/EmployeeObserver.h
         helper/OrderSubject.cpp
         helper/OrderSubject.h
-        helper/PaymentStrategy.h)
+        helper/PaymentStrategy.h
+        model/CreditCardPayment.cpp
+        model/CreditCardPayment.h
+        model/CashPayment.cpp
+        model/CashPayment.h
+        helper/Checkout.cpp
+        helper/Checkout.h)

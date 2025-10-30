@@ -14,7 +14,7 @@ CafeConfig& CafeConfig::getInstance() {
 }
 
 // Getter implementation
-std::string_view CafeConfig::getCafeName() const {
+std::string_view CafeConfig::getCafeName() {
     return cafeName; // + &instance;
 }
 
