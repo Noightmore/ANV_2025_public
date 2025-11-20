@@ -24,4 +24,5 @@ add_executable(hergesel_cafe main.cpp config/CafeConfig.h config/CafeConfig.cpp
         model/CashPayment.cpp
         model/CashPayment.h
         helper/Checkout.cpp
-        helper/Checkout.h)
+        helper/Checkout.h
+        helper/ICommand.h)
