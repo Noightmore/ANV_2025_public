@@ -4,6 +4,9 @@
 
 #ifndef HERGL_CAFE_ORDERSUBJECT_H
 #define HERG_CAFE_ORDERSUBJECT_H
+
+#pragma once
+
 #include <vector>
 
 #include "IObserver.h"

@@ -1,11 +1,12 @@
 #include <iostream>
-
 #include "config/CafeConfig.h"
 #include "helper/Checkout.h"
 #include "helper/CustomDrink.h"
 #include "helper/DrinkFactory.h"
 #include "helper/EmployeeObserver.h"
+#include "helper/OrderCommand.h"
 #include "helper/OrderSubject.h"
+#include "helper/PaymentCommand.h"
 #include "model/CashPayment.h"
 #include "model/CreditCardPayment.h"
 
@@ -37,8 +38,10 @@ int main() {
     // prvni 4 navrhove vzory
 
 
+    // STRATEGY
+
     // stack allocation:
-    auto order = OrderSubject();
+    /*auto order = OrderSubject();
     // heap allocation:
     // auto order = new OrderSubject();
 
@@ -58,7 +61,81 @@ int main() {
     auto checkout = helper::Checkout(std::make_unique<model::CreditCardPayment>());
     payment.notifyAll(*checkout.processPayment(20,-234566));
     checkout.setPaymentStrategy(std::make_unique<model::CashPayment>());
-    payment.notifyAll(*checkout.processPayment(15,42));
+    payment.notifyAll(*checkout.processPayment(15,42));*/
+
+
+    // -----------------------------------------
+    // OBSERVER + COMMAND + STRATEGY část
+    // -----------------------------------------
+
+    // Subjekt pro objednávky
+    auto orderSubject = OrderSubject();
+
+    // Subjekt pro platby
+    auto paymentSubject = OrderSubject();
+
+    // Zaměstnanci (pozorovatelé)
+    auto waiter  = EmployeeObserver("Waiter");
+    auto barista = EmployeeObserver("Barista");
+
+    // Kdo reaguje na objednávky
+    orderSubject.addObserver(&barista);
+    orderSubject.addObserver(&waiter);
+
+    // Kdo reaguje na platby
+    paymentSubject.addObserver(&waiter);
+
+    // Vytvoříme vlastní drink
+    const auto customDrink =
+        CustomDrink::Builder("Tea").withMilk().withSugar().build();
+
+    const auto cafeName = std::string(CafeConfig::getInstance().getCafeName());
+
+    // --- ORDER COMMANDS ---
+
+    const auto orderMessage =
+        "New order: " + customDrink.toString() + " in " + cafeName;
+
+    command::OrderCommand teaOrder(orderSubject, orderMessage);
+
+    // Pokud máš více objednávek, prostě vytvoříš další Command:
+    const auto coffeeDrink =
+        CustomDrink::Builder("Coffee").withMilk().withSugar().build();
+    const auto coffeeOrderMessage =
+        "New order: " + coffeeDrink.toString() + " in " + cafeName;
+
+    command::OrderCommand coffeeOrder(orderSubject, coffeeOrderMessage);
+
+    // Spuštění commandů (notifikace proběhnou uvnitř execute())
+    teaOrder.execute();
+    coffeeOrder.execute();
+
+    // --- PAYMENT COMMANDS (STRATEGY + COMMAND) ---
+
+    auto checkout = helper::Checkout(std::make_unique<model::CreditCardPayment>());
+
+    // Zaplacení kartou
+    command::PaymentCommand payByCard(
+        paymentSubject,   // payment subject
+        checkout,  // checkout se strategií CreditCardPayment
+        20.0,      // amount
+        -234566    // table number
+    );
+
+    payByCard.execute();
+
+    // Změna strategie na cash
+    checkout.setPaymentStrategy(std::make_unique<model::CashPayment>());
+
+    command::PaymentCommand payByCash(
+        paymentSubject,
+        checkout,
+        15.0,
+        42
+    );
+
+    payByCash.execute();
 
     return 0;
+
 }
