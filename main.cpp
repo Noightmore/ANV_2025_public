@@ -10,7 +10,10 @@
 #include "helper/PaymentCommand.h"
 #include "helper/ToGoDecorator.h"
 #include "model/CashPayment.h"
+#include "model/Coffee.h"
 #include "model/CreditCardPayment.h"
+#include "model/DrinkOrder.h"
+#include "model/Tea.h"
 
 int main() {
     //CafeConfig& config = CafeConfig::getInstance();
@@ -144,6 +147,7 @@ int main() {
     // OBSERVER + COMMAND + STRATEGY část
     // -----------------------------------------
 
+    /*
     // Subjekt pro objednávky
     auto orderSubject = OrderSubject();
 
@@ -218,7 +222,41 @@ int main() {
         42
     );
     payByCash.execute();
+    */
 
+    // -----------------------------------------
+    // TEMPLATE + COMPOSITE – mobilní objednávka
+    // -----------------------------------------
+
+    auto orderSubject = OrderSubject();
+
+    // Subjekt pro platby
+    auto paymentSubject = OrderSubject();
+
+    // Zaměstnanci (pozorovatelé)
+    auto waiter  = EmployeeObserver("Waiter");
+    auto barista = EmployeeObserver("Barista");
+
+    // Kdo reaguje na objednávky
+    orderSubject.addObserver(&barista);
+    orderSubject.addObserver(&waiter);
+
+    model::DrinkOrder mobileOrder;
+
+    // Java-like:
+    // mobileOrder.add(new Coffee());
+    // mobileOrder.add(new Tea());
+    mobileOrder.add(std::make_unique<Coffee>());
+    mobileOrder.add(std::make_unique<Tea>());
+
+    // Command hint from assignment:
+    command::OrderCommand mobileOrderCommand(
+        orderSubject,                       // už máš vytvořený OrderSubject
+        "New mobile app order created"
+    );
+
+    mobileOrderCommand.execute();           // notifikace personálu
+    mobileOrder.prepare();                  // detailní kroky v [APP] výpisech
     return 0;
 
 }

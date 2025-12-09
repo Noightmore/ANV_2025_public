@@ -35,4 +35,10 @@ add_executable(hergesel_cafe main.cpp config/CafeConfig.h config/CafeConfig.cpp
         helper/ToGoDecorator.cpp
         helper/ToGoDecorator.h
         helper/OwnMugDecorator.cpp
-        helper/OwnMugDecorator.h)
+        helper/OwnMugDecorator.h
+        model/PreparableDrink.cpp
+        model/PreparableDrink.h
+        model/DrinkTemplate.cpp
+        model/DrinkTemplate.h
+        model/DrinkOrder.cpp
+        model/DrinkOrder.h)
