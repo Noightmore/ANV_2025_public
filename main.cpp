@@ -6,7 +6,9 @@
 #include "helper/EmployeeObserver.h"
 #include "helper/OrderCommand.h"
 #include "helper/OrderSubject.h"
+#include "helper/OwnMugDecorator.h"
 #include "helper/PaymentCommand.h"
+#include "helper/ToGoDecorator.h"
 #include "model/CashPayment.h"
 #include "model/CreditCardPayment.h"
 
@@ -68,6 +70,7 @@ int main() {
     // OBSERVER + COMMAND + STRATEGY část
     // -----------------------------------------
 
+    /*
     // Subjekt pro objednávky
     auto orderSubject = OrderSubject();
 
@@ -134,6 +137,86 @@ int main() {
         42
     );
 
+    payByCash.execute();
+    */
+
+    // -----------------------------------------
+    // OBSERVER + COMMAND + STRATEGY část
+    // -----------------------------------------
+
+    // Subjekt pro objednávky
+    auto orderSubject = OrderSubject();
+
+    // Subjekt pro platby
+    auto paymentSubject = OrderSubject();
+
+    // Zaměstnanci (pozorovatelé)
+    auto waiter  = EmployeeObserver("Waiter");
+    auto barista = EmployeeObserver("Barista");
+
+    // Kdo reaguje na objednávky
+    orderSubject.addObserver(&barista);
+    orderSubject.addObserver(&waiter);
+
+    // Kdo reaguje na platby
+    paymentSubject.addObserver(&waiter);
+
+    const auto cafeName = std::string(CafeConfig::getInstance().getCafeName());
+
+    // ----------- DRINKS + DECORATORS -----------
+
+    // Tea: milk + sugar, to-go + own mug (example)
+    CustomDrink baseTea =
+        CustomDrink::Builder("Tea").withMilk().withSugar().build();
+
+    // chain decorators: ToGo -> OwnMug
+    helper::ToGoDecorator      teaToGo(baseTea);
+    helper::OwnMugDecorator    teaOwnMug(teaToGo);
+
+    // Coffee: milk + sugar, only own mug (example)
+    CustomDrink baseCoffee =
+        CustomDrink::Builder("Coffee").withMilk().build();
+
+    helper::OwnMugDecorator    coffeeOwnMug(baseCoffee);
+
+    // --- ORDER COMMANDS ---
+
+    const auto teaOrderMessage =
+        "New order: " + teaOwnMug.toString() + " in " + cafeName;
+
+    command::OrderCommand teaOrder(orderSubject, teaOrderMessage);
+
+    const auto coffeeOrderMessage =
+        "New order: " + coffeeOwnMug.toString() + " in " + cafeName;
+
+    command::OrderCommand coffeeOrder(orderSubject, coffeeOrderMessage);
+
+    // Spuštění commandů (notifikace proběhnou uvnitř execute())
+    teaOrder.execute();
+    coffeeOrder.execute();
+
+    // --- PAYMENT COMMANDS (STRATEGY + COMMAND) ---
+
+    auto checkout = helper::Checkout(std::make_unique<model::CreditCardPayment>());
+
+    // Zaplacení kartou
+    command::PaymentCommand payByCard(
+        paymentSubject,   // payment subject
+        checkout,         // checkout se strategií CreditCardPayment
+        20.0,             // amount
+        -234566           // table number
+    );
+    payByCard.execute();
+
+    // Změna strategie na cash
+    checkout.setPaymentStrategy(std::make_unique<model::CashPayment>());
+
+    command::PaymentCommand payByCash(
+        paymentSubject,
+        checkout,
+        15.0,
+        42
+    );
     payByCash.execute();
 
     return 0;

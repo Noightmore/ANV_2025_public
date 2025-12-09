@@ -16,15 +16,18 @@ private:
     bool sugar = false;
     bool caramel = false;
 
+protected:
     // explicit keyword
     explicit CustomDrink(std::string base, const bool milk, const bool sugar, const bool caramel)
         : base(std::move(base)), milk(milk), sugar(sugar), caramel(caramel) {}
         // pass by value and use std::move for efficiency instead of pass by reference
 
 public:
+    virtual ~CustomDrink() = default;
+
     class Builder;
 
-    std::string toString() const;
+    virtual std::string toString() const;
 
     // Getters (optional, but useful)
     // std::string getBase() const { return base; }

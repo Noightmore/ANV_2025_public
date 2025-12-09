@@ -29,4 +29,10 @@ add_executable(hergesel_cafe main.cpp config/CafeConfig.h config/CafeConfig.cpp
         helper/OrderCommand.cpp
         helper/OrderCommand.h
         helper/PaymentCommand.cpp
-        helper/PaymentCommand.h)
+        helper/PaymentCommand.h
+        helper/CustomDrinkDecorator.cpp
+        helper/CustomDrinkDecorator.h
+        helper/ToGoDecorator.cpp
+        helper/ToGoDecorator.h
+        helper/OwnMugDecorator.cpp
+        helper/OwnMugDecorator.h)
